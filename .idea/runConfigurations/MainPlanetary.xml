@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MainPlanetary" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="solution.MainPlanetary" />
+    <module name="nbody1" />
+    <option name="PROGRAM_PARAMETERS" value="10 0 trace" />
+    <option name="VM_PARAMETERS" value="-ea" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

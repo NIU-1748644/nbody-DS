@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MainCentral" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="solution.MainCentral" />
+    <module name="nbody1" />
+    <option name="PROGRAM_PARAMETERS" value="100 10 trace" />
+    <option name="VM_PARAMETERS" value="-ea" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
