@@ -1,0 +1,83 @@
+--- Preguntes sobre Integrator
+
+1. Que fa un integrador, en una frase?
+
+Un Integrator encapsula un metode numeric d'integracio: donat un
+Universe, calcula i escriu la nova posicio i velocitat de cada cos
+despres d'un pas de temps (timeStep), a partir de la forca que
+rep cada cos (Universe.computeForceOn(i)).
+
+2. Quines dades tenen en comu els diferents integradors?
+
+Tots comparteixen l'atribut timeStep (Δt): esta declarat com a
+"protected final double timeStep" a la classe abstracta Integrator,
+en lloc de repetir-lo a Euler i a LeapFrog per separat (DRY).
+Tambe comparteixen la mateixa signatura de metode:
+move(Universe universe).
+
+3. Qui hauria de crear un Integrator?
+
+Qui te la dada necessaria (el timeStep) i sap quin esquema numeric
+vol fer servir: en el nostre codi, els Main* (per exemple
+Main.java, linia "new Euler(dt)" o "new LeapFrog(dt)"), seguint
+GRASP Creator.
+
+4. Qui el necessita?
+
+NBodySimulator el rep al constructor i el fa servir a simulate(),
+cridant universe.update(integrator) a cada iteracio -- mai crida
+Euler o LeapFrog directament, nomes coneix la classe abstracta
+Integrator.
+
+5. Com s'afegiria un integrador nou (per exemple Runge-Kutta)?
+
+Creant una nova subclasse de Integrator (per exemple
+"class RungeKutta extends Integrator") que implementi move(),
+sense tocar NBodySimulator, Universe, Body ni cap Main existent
+(Open-Closed Principle). Es la mateixa idea que Euler i LeapFrog.
+
+
+--- Preguntes sobre Plotter 
+
+6. Quants plotters tenim i que tenen en comu?
+
+Dos: Online (dibuixa en pantalla amb StdDraw, fotograma a
+fotograma) i Offline (guarda cada posicio a un fitxer de text).
+Tots dos implementen la mateixa interficie Plotter (start/draw/
+stop) i tots dos reben nomes Vector[] a draw(), mai un Universe ni
+una llista de Body -- aixi Plotter no depen de les classes de
+domini (don't talk to strangers).
+
+7. Que va dins de start() i stop() de cadascun?
+
+Online.start(): prepara el canvas (StdDraw.enableDoubleBuffering,
+setPenRadius, setXscale/setYscale, i si trace=true, pinta el fons
+gris). Online.stop(): no cal fer res (StdDraw no te finestra per
+tancar explicitament).
+Offline.start(): obre el PrintWriter cap al fitxer de sortida i hi
+escriu el nombre de cossos com a primera linia. Offline.stop():
+tanca el PrintWriter (printWriter.close()), per assegurar que les
+dades queden escrites al disc.
+
+8. Qui instancia un Plotter? I un Integrator?
+
+Els dos els instancia qui construeix la simulacio (els Main*), just
+abans de crear el NBodySimulator -- son ells qui saben, a partir
+dels arguments de linia de comandes, si l'usuari vol online/offline
+i euler/leapfrog.
+
+9. Qui els necessita?
+
+NBodySimulator: rep el Plotter (i l'Integrator) al constructor i el
+fa servir dins de simulate(), cridant plotter.start(), despres
+plotter.draw(universe.getAllBodiesPosition()) a cada pas, i
+plotter.stop() al final -- sense saber si dibuixa a pantalla o a
+fitxer.
+
+10. Com s'afegiria un tipus de plotter nou (per exemple exportar a
+    JSON)?
+
+Creant una nova classe (per exemple "class JsonPlotter implements
+Plotter") amb start/draw/stop propis, sense modificar
+NBodySimulator ni cap altra classe existent (Open-Closed Principle,
+mateix raonament que amb els integradors).
