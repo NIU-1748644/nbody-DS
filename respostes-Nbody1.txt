@@ -1,0 +1,83 @@
+Respostes
+=========
+
+--- Preguntes de la diapositiva #39 (Part 1) ---
+
+i.Quins patrons GRASP / principis de disseny apliquem en fer la
+   refactoritzacio?
+
+- Expert: Body es l'expert que calcula la forca gravitatoria
+  (forceFrom) i el seu propi moviment, perque nomes ell te la
+  massa i la posicio necessaries.
+- Creator: Universe crea els seus Body quan llegeix el fitxer
+  (te les dades i els conte); quan la creacio es mes complexa
+  (configuracions especials), aquesta responsabilitat es delega
+  a UniverseFactory (l'excepcio classica de Creator).
+- Indirection / baix acoblament: NBodySimulator nomes parla amb
+  Universe, mai directament amb Body; els Plotter nomes reben
+  Vector[] (posicions), mai un Universe ni una llista de Body.
+- Alta cohesio / Single Responsibility: cada classe fa una sola
+  cosa -- Body (fisica d'un cos), Universe (contenidor +
+  coordinacio), NBodySimulator (orquestracio), UniverseFactory
+  (creacio de configuracions), Integrator (esquema numeric),
+  Plotter (sortida).
+- Information hiding: tots els atributs son privats, amb nomes
+  els getters/setters necessaris.
+- DRY: el timeStep viu una sola vegada a la classe abstracta
+  Integrator, no repetit a Euler i LeapFrog.
+- Polimorfisme / Open-Closed: Integrator i Plotter son
+  abstraccions amb multiples implementacions intercanviables,
+  evitant if/instanceof per decidir el comportament i permetent
+  afegir-ne de nous sense tocar codi existent.
+
+ii. Resposta a les preguntes de la diapositiva #37
+
+Pros i contres:
+
+1) Constructors a Universe:
+   + senzill, tot en un sol lloc
+   - Universe acumula logica de creacio que no li pertoca (perd
+     cohesio), barreja "com guardar/actualitzar cossos" amb "com
+     inventar-se condicions inicials molt especifiques"; cada
+     configuracio nova fa creixer mes Universe.
+
+2) Universe abstracta + subclasses (Choreography, Nplus1,
+   CentralConfiguration, ConfigurationFromFile):
+   + cada configuracio queda aillada en la seva propia classe
+   - un cop creat, un objecte Choreography es comporta exactament
+     igual que qualsevol altre Universe (no hi ha polimorfisme
+     real en temps d'execucio, nomes en la construccio), aixi que
+     la jerarquia d'herencia no aporta res mes enlla del
+     constructor -- multiplica classes sense multiplicar
+     comportament.
+
+3) UniverseFactory amb metodes estatics (la que hem implementat):
+   + Universe es manté cohesiva (nomes sap guardar/actualitzar
+     cossos, no inventar-los per a cada escenari)
+   + cap subclasse nova de Universe: afegir una configuracio es
+     només un metode estatic mes
+   + coincideix amb l'excepcio de GRASP Creator per a creacio
+     complexa
+   - els metodes estatics no son polimorfics ni facils de testejar
+     amb mocks, pero aqui no calia polimorfisme perque totes les
+     configuracions acaben sent un Universe igual de simple.
+
+La millor segons els principis de disseny: l'opcio 3
+(UniverseFactory), perque manté Universe cohesiva i evita crear
+subclasses que no afegeixen cap comportament nou despres de la
+construccio.
+
+iii. Com heu dissenyat l'extensio de les configuracions especials?
+
+Hem creat UniverseFactory amb un metode estatic per configuracio
+(makeCentralConfiguration, makePlanetaryConfiguration,
+makeChoreography), cadascun retornant un Universe ja construit.
+Per fer-ho possible, hem afegit un segon constructor a Universe
+que accepta un array de Body ja creat mes el radi (a mes de
+l'original, que llegeix d'un fitxer), i un segon constructor a
+Body amb parametre G (les coreografies fan servir un G normalitzat
+= 1.0, no la constant fisica real). Cada configuracio te el seu
+propi punt d'entrada (MainCentral, MainPlanetary,
+MainChoreography), seguint el mateix patro que el Main original.
+
+
