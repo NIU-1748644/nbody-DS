@@ -3,7 +3,7 @@ Respostes
 
 --- Preguntes de la diapositiva #39 (Part 1) ---
 
-i. Quins patrons GRASP / principis de disseny apliquem en fer la
+i.Quins patrons GRASP / principis de disseny apliquem en fer la
    refactoritzacio?
 
 - Expert: Body es l'expert que calcula la forca gravitatoria
@@ -31,11 +31,6 @@ i. Quins patrons GRASP / principis de disseny apliquem en fer la
   afegir-ne de nous sense tocar codi existent.
 
 ii. Resposta a les preguntes de la diapositiva #37
-
-Les tres opcions per crear les configuracions especials eren:
-1) constructors addicionals a Universe, 2) fer Universe abstracta
-amb una subclasse per configuracio, 3) una classe UniverseFactory
-amb un metode estatic per configuracio.
 
 Pros i contres:
 
