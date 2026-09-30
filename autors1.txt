@@ -1,0 +1,22 @@
+Autors
+======
+
+- González Ballbé, Santiago — NIU 1748644
+- Bai, Junye — NIU 1750099
+- Cabello Melón, Sònia — NIU 1625706
+
+Qui ha fet què
+==============
+
+- González Ballbé, Santiago — NIU 1748644
+  · Refactorització: Main, Universe, Body i NBodySimulator.
+  · Configuracions especials a UniverseFactory (central, planetària i coreografies).
+  · Paquets students/solution i run configurations d'IntelliJ.
+
+- Bai, Junye — NIU 1750099
+  · Redacció de les respostes a les preguntes de l'enunciat al fitxer de respostes de n-body1.
+  · Coordinació del repartiment de tasques i seguiment del lliurament.
+
+- Cabello Melón, Sònia — NIU 1625706
+  · Elaboració del diagrama de classes de n-body1 en PlantUML i exportació del diagrama a PNG.
+  · Revisió final de la coherència entre el diagrama, el codi i els fitxers que cal lliurar.
