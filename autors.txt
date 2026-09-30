@@ -11,3 +11,8 @@ Qui ha fet què
 [Pendent d'omplir per l'equip: detalleu aquí la contribució de cada
 membre, per exemple]
 ...
+
+- González Ballbé, Santiago — NIU 1748644
+  · Refactorització: Main, Universe, Body i NBodySimulator.
+  · Configuracions especials a UniverseFactory (central, planetària i coreografies).
+  · Paquets students/solution i run configurations d'IntelliJ.
