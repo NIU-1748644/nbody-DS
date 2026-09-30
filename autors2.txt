@@ -1,0 +1,20 @@
+Autors
+======
+
+- González Ballbé, Santiago — NIU 1748644
+- Bai, Junye — NIU 1750099
+- Cabello Melón, Sònia — NIU 1625706
+
+Qui ha fet què
+==============
+
+- González Ballbé, Santiago — NIU 1748644
+  · Suport en la coordinació de les tasques i en el seguiment del treball de l'equip.
+
+- Bai, Junye — NIU 1750099
+  · Implementació del codi de la segona part: integradors, plotters i adaptació de la simulació.
+  · Redacció de les respostes a les preguntes de l'enunciat.
+
+- Cabello Melón, Sònia — NIU 1625706
+  · Elaboració del diagrama de classes de n-body2 en PlantUML i exportació del diagrama a PNG.
+  · Revisió final de la coherència entre el diagrama, el codi i els fitxers que cal lliurar.
