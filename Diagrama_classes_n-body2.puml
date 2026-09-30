@@ -1,0 +1,205 @@
+@startuml
+title Diagrama de classes - N-body, part 2
+
+skinparam classAttributeIconSize 0
+left to right direction
+
+package solution {
+  class Main {
+    + {static} main(args String[]) void
+    ~ {static} makeIntegrator(name String, dt double) Integrator
+    ~ {static} makePlotter(type String, universe Universe, trace boolean, pauseTime int, args String[], outIdx int) Plotter
+    ~ {static} run(simulator NBodySimulator, plotterType String, args String[], endIdx int) void
+  }
+
+  class MainCentral {
+    + {static} main(args String[]) void
+  }
+
+  class MainPlanetary {
+    + {static} main(args String[]) void
+  }
+
+  class MainChoreography {
+    + {static} main(args String[]) void
+  }
+
+  class NBodySimulator {
+    - universe Universe
+    - plotter Plotter
+    - integrator Integrator
+    --
+    + NBodySimulator(universe Universe, plotter Plotter, integrator Integrator)
+    + simulate() void
+    + simulate(endTime double) void
+  }
+
+  class Universe {
+    - numBodies int
+    - radius double
+    - bodies Body[]
+    --
+    + Universe(bodies Body[], radius double)
+    + Universe(fname String)
+    + getNumBodies() int
+    + getRadius() double
+    + getAllBodiesPosition() Vector[]
+    + getBodyMass(i int) double
+    + getBodyPosition(i int) Vector
+    + getBodyVelocity(i int) Vector
+    + getBodyAcceleration(i int) Vector
+    + setBodyPosition(i int, position Vector) void
+    + setBodyVelocity(i int, velocity Vector) void
+    + setBodyAcceleration(i int, acceleration Vector) void
+    + computeForceOn(i int) Vector
+    + update(integrator Integrator) void
+  }
+
+  class Body {
+    - r Vector
+    - v Vector
+    - a Vector
+    - mass double
+    - G double
+    --
+    + Body(r Vector, v Vector, mass double)
+    + Body(r Vector, v Vector, mass double, G double)
+    + move(f Vector, dt double) void
+    + forceFrom(b Body) Vector
+    + getPosition() Vector
+    + getVelocity() Vector
+    + getAcceleration() Vector
+    + getMass() double
+    + setPosition(r Vector) void
+    + setVelocity(v Vector) void
+    + setAcceleration(a Vector) void
+    + toString() String
+  }
+
+  class UniverseFactory {
+    + {static} makeCentralConfiguration(numBodies int, angleVelPos double) Universe
+    + {static} makePlanetaryConfiguration(numPlanets int) Universe
+    + {static} makeChoreography(nchoreography int) Universe
+    - {static} randomBetween(minValue double, maxValue double) double
+  }
+}
+
+package solution.integrators {
+  abstract class Integrator {
+    # timeStep double
+    --
+    + Integrator(timeStep double)
+    + getTimeStep() double
+    + {abstract} move(universe Universe) void
+  }
+
+  class Euler {
+    + Euler(timeStep double)
+    + move(universe Universe) void
+  }
+
+  class LeapFrog {
+    + LeapFrog(timeStep double)
+    + move(universe Universe) void
+  }
+}
+
+package solution.plotters {
+  interface Plotter {
+    + start() void
+    + draw(positions Vector[]) void
+    + stop() void
+  }
+
+  class Online {
+    - trace boolean
+    - radius double
+    - pauseTime int
+    - previous Vector[]
+    --
+    + Online(trace boolean, radius double, pauseTime int)
+    + start() void
+    + draw(positions Vector[]) void
+    + stop() void
+    - createCanvas() void
+    - drawBodies(positions Vector[]) void
+  }
+
+  class Offline {
+    - fname String
+    - numBodies int
+    - printWriter PrintWriter
+    --
+    + Offline(fname String, numBodies int)
+    + start() void
+    + draw(positions Vector[]) void
+    + stop() void
+  }
+}
+
+package solution.util {
+  class Vector {
+    - n int
+    - data double[]
+    --
+    + Vector(n int)
+    + Vector(data double[])
+    + length() int
+    + dot(that Vector) double
+    + magnitude() double
+    + distanceTo(that Vector) double
+    + plus(that Vector) Vector
+    + minus(that Vector) Vector
+    + cartesian(i int) double
+    + times(factor double) Vector
+    + scale(factor double) Vector
+    + direction() Vector
+    + toString() String
+  }
+
+  class StdDraw
+}
+
+Integrator -- Euler
+Integrator -- LeapFrog
+
+Plotter .. Online
+Plotter .. Offline
+
+NBodySimulator -- 1 Universe  universe
+NBodySimulator -- 1 Integrator  integrator
+NBodySimulator -- 1 Plotter  plotter
+
+Universe 1 -- 1.. Body  bodies
+Universe .. Integrator  update()
+Body -- 3 Vector  r, v, a
+
+Integrator .. Universe  move()
+Plotter .. Vector  draw(positions)
+Online -- Vector  previous
+Online .. StdDraw  dibuixa
+
+UniverseFactory .. Universe  crea
+UniverseFactory .. Body  crea
+UniverseFactory .. Vector  crea
+
+Main .. Universe  crea des de fitxer
+Main .. NBodySimulator  crea
+Main .. Euler  crea
+Main .. LeapFrog  crea
+Main .. Online  crea
+Main .. Offline  crea
+
+MainCentral .. Main  utilitza
+MainCentral .. UniverseFactory  utilitza
+MainCentral .. NBodySimulator  crea
+
+MainPlanetary .. Main  utilitza
+MainPlanetary .. UniverseFactory  utilitza
+MainPlanetary .. NBodySimulator  crea
+
+MainChoreography .. Main  utilitza
+MainChoreography .. UniverseFactory  utilitza
+MainChoreography .. NBodySimulator  crea
+
+@enduml
